@@ -1,0 +1,1 @@
+console.warn("this is a CLI program written in node");

@@ -1,0 +1,11 @@
+# dev
+
+.*
+!.*ignore
+!.*rc
+node_modules/
+
+# generated
+
+coverage/
+*.log*

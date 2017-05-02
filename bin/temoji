@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+const program = require("commander");
+const chalk = require("chalk");
+
+const PCK = require("../package.json");
+
+const writeLn = require("../lib/util/write-ln");
+const dataList = require("../lib/data/list");
+const dataSearch = require("../lib/data/search");
+
+program.version(PCK.version)
+	.option("-p, --peppers", "Add peppers")
+	.option("-r <cmd>", "执行子命令");
+
+/* // how to add a command
+ * program.command("cmd [param]")
+ *	.description("list all tags")
+ *	.option("-s, --setup_mode [mode]", "Which setup mode to use")
+ *	.action((param, options) => {
+ *		console.info(env, options.setup_mode);
+ *	});
+ */
+
+program.command("list [env]")
+	.description("list all tags")
+	.action(() => dataList().then(data => Object.keys(data).forEach(tag => {
+		writeLn(`${tag} ${chalk.gray(data[tag].length)}`);
+	})));
+
+program.command("search [tag]")
+	.description("search and list emoji's of a tag")
+	.action(tag => dataSearch(tag).then(emojiArr => {
+		if (!emojiArr.length) {
+			writeLn("nothing found");
+			return;
+		}
+		
+		emojiArr.forEach((v, k) => writeLn(`${chalk.gray(`${k + 1}.`)}\t${chalk.bold(v)}`));
+	}));
+
+program.parse(process.argv);
